@@ -3,8 +3,7 @@
 #include <algorithm>
 #include <math.h>
 
-int lsearch(long int vector[], int last, long int value)
-{
+int lsearch(long int vector[], int last, long int value) {
     int first = 0;
     while(first != last) {
         if(vector[first] == value) {
@@ -16,8 +15,7 @@ int lsearch(long int vector[], int last, long int value)
     return -1;
 }
 
-int bsearch(long int vector[], int last, long int value)
-{
+int bsearch(long int vector[], int last, long int value) {
     int first = 0;
     while((last - first) > 1) {
         int sz = last - first;
@@ -44,8 +42,7 @@ int bsearch(long int vector[], int last, long int value)
     return -1;
 }
 
-int bsearch(long int vector[], int first, int last, long int value)
-{
+int bsearch(long int vector[], int first, int last, long int value) {
     if((last - first) > 1) {
         int sz = last - first;
         int middle = sz/2;
@@ -72,28 +69,26 @@ int bsearch(long int vector[], int first, int last, long int value)
     }
 }
 
-int jsearch(long int vector[], int last, long int value)
-{
+int jsearch(long int vector[], int last, long int value) {
     int jump = sqrt(last+1);
     int k = 1;
     int first = 0;
-    while(k*jump <= last)
-    {
+
+    while(k*jump <= last) {    
         if(vector[k*jump] == value) {
             return k*jump;
-        } else if(vector[k*jump] < value){
+        } else if(vector[k*jump] > value){
             return lsearch(vector, k*jump, value);
         } else {
             first = k*jump;
-            k++;
+            ++k;
         }
     }
 
     return -1;
 }
 
-int main()
-{
+int main() {
     long int A[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }; // Data container.
     long int targets[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 , -4, 20 }; // Target values for testing.
 
