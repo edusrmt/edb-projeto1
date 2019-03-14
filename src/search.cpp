@@ -58,7 +58,7 @@ int bsearch(long int vector[], int first, int last, long int value)
         } else if(x > value) {
             last -= middle;
         }
-        bsearch(vector, first, last, value);
+        return bsearch(vector, first, last, value);
 
         if((last - first) == 1) {
             if(value == vector[first]) {
@@ -67,7 +67,6 @@ int bsearch(long int vector[], int first, int last, long int value)
                 return last;
             }
         }
-
     } else {
         return -1;
     }
