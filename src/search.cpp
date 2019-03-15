@@ -12,8 +12,8 @@ void print_step (long int vector[], int first, int last) {
     std::cout << "]\n";
 }
 
-int lsearch(long int vector[], int last, long int value) {
-    for (int i = 0; i <= last; i++) {
+int lsearch(long int vector[], int last, long int value, int first = 0) {
+    for (int i = first; i <= last; i++) {
         if (vector[i] == value)
             return i;
     }
@@ -65,30 +65,60 @@ int bsearch_r(long int vector[], int last, long int value, int first = 0) {
 
 int tsearch_i(long int vector[], int last, long int value) {
     int first = 0;
-    while (last - first > 2) {
-        int sz = last - first;
-        int indexA = first + sz;
-        int indexB = indexA + sz;
+    int length = last + 1;
 
-        if (vector[indexA] == value) {
+    while (first <= last) {
+        int indexA = length / 3 + first;
+
+        if (vector[indexA] == value)
             return indexA;
-        } else if (vector[indexA] < value) {
-            first = indexA;
+        else if (vector[indexA] > value)
+            last = indexA - 1;
+        else {
+            int indexB = 2 * length / 3 + first;
+            first = indexA + 1;
 
-            if (vector[indexB] == value) {
+            if (vector[indexB] == value)
                 return indexB;
-            } else if (vector[indexB] < value) {
-                first = indexB;
-            } else if (vector[indexB] > value) {
-                last = indexB;
-            }
-        } else if (vector[indexA] > value) {
-            last = indexA;
+            else if (vector[indexB] < value)
+                first = indexB + 1;
+            else
+                last = indexB - 1;
         }
+
+        length = last - first + 1;
     }
+    
+    return -1;
+}
 
-    if (last - first == 2) {
+int tsearch_r(long int vector[], int last, long int value, int first = 0) {
+    int length = last - first + 1;
 
+    if (first <= last) {
+        int indexA = length / 3 + first;
+
+        if (vector[indexA] == value)
+            return indexA;
+        else {
+            if (vector[indexA] > value)
+                last = indexA - 1;
+            else {
+                int indexB = 2 * length / 3 + first;
+                first = indexA + 1;
+
+                if (vector[indexB] == value)
+                    return indexB;
+                else if (vector[indexB] < value)
+                    first = indexB + 1;
+                else
+                    last = indexB - 1;
+            }
+
+            return tsearch_r(vector, last, value, first);
+        }
+
+        length = last - first + 1;
     }
     
     return -1;
@@ -96,18 +126,49 @@ int tsearch_i(long int vector[], int last, long int value) {
 
 int jsearch(long int vector[], int last, long int value) {
     int jump = sqrt(last+1);
-    int k = 1;
-    int first = 0;
+    int preIndex = 0;
+    int curIndex = jump;
 
-    while(k*jump <= last) {    
-        if(vector[k*jump] == value) {
-            return k*jump;
-        } else if(vector[k*jump] > value){
-            return lsearch(vector, k*jump, value);
-        } else {
-            first = k*jump;
-            ++k;
+    while (curIndex <= last) {    
+        if(vector[curIndex] == value)
+            return curIndex;
+        else if (vector[curIndex] > value)
+            return lsearch(vector, curIndex, value, preIndex);
+        else {
+            preIndex = curIndex;
+            curIndex += jump;
         }
+    }
+
+    return -1;
+}
+
+int fibonacci_split (int value) {
+    int a = 1;
+    int b = 1;
+
+    while(value > b){
+        int c = a;
+        a = b;
+        b += c;
+    }
+    
+    return b - a;
+}
+
+int fsearch(long int vector[], int last, long int value) {
+    int first = 0;
+    int split = fibonacci_split(last + 1);
+
+    while(first <= last) {
+        if (vector[split] == value)
+            return vector[split];
+        else if (vector[split] < value)
+            first = split + 1;
+        else 
+            last = split - 1;
+
+        split = fibonacci_split(last - first + 1) + first;        
     }
 
     return -1;
@@ -129,7 +190,7 @@ int main() {
     {
         // Look for target in the entire range.
         //auto result = const_cast<value_type *>(lsearch(std::begin(A), std::end(A), e));
-        int result = bsearch_r(A, 9, e);
+        int result = fsearch(A, 9, e);
 
         // Process the result
         if(result != -1)
