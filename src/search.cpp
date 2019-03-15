@@ -143,32 +143,28 @@ int jsearch(long int vector[], int last, long int value) {
     return -1;
 }
 
-int fibonacci_split (int value) {
-    int a = 1;
-    int b = 1;
-
-    while(value > b){
-        int c = a;
-        a = b;
-        b += c;
-    }
-    
-    return b - a;
-}
-
 int fsearch(long int vector[], int last, long int value) {
     int first = 0;
-    int split = fibonacci_split(last + 1);
 
     while(first <= last) {
+        int a = 1;
+        int b = 1;
+
+        while(last - first + 1 > b){
+            int c = a;
+            a = b;
+            b += c;
+        }
+
+        int split = b - a + first;
+
         if (vector[split] == value)
             return vector[split];
         else if (vector[split] < value)
             first = split + 1;
         else 
             last = split - 1;
-
-        split = fibonacci_split(last - first + 1) + first;        
+               
     }
 
     return -1;
