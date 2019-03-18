@@ -1,6 +1,8 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include <string>
+#include <new>
 #include <math.h>
 
 void print_step (long int vector[], int first, int last) {
@@ -170,32 +172,47 @@ int fsearch(long int vector[], int last, long int value) {
     return -1;
 }
 
-int main() {
-    long int A[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }; // Data container.
-    long int targets[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -4, 20}; // Target values for testing.
-
-    // Prints out the original data container.
-    std::cout << "Array: [ ";
-    for (const auto & x : A)
-        std::cout << x << " ";
-    //std::copy( std::begin(A), std::end(A), std::ostream_iterator<value_type>( std::cout , " " ) );
-    std::cout << "]\n";
-
-    // Executes several searchs in the data container.
-    for (long int &e : targets)
-    {
-        // Look for target in the entire range.
-        //auto result = const_cast<value_type *>(lsearch(std::begin(A), std::end(A), e));
-        int result = fsearch(A, 9, e);
-
-        // Process the result
-        if(result != -1)
-        {
-            std::cout << ">>> Found \"" << e << "\" at position " << result << ".\n";
+long int * generateArray(int size) {
+    long int *array = new (std::nothrow) long int[size];
+    if(array == nullptr) 
+        std::cout << "Failed to create array" << std::endl;
+    else {
+        for(int i = 0; i < size; ++i) {
+            array[i] = i;
         }
-        else
-        {
-            std::cout << ">>> Value \"" << e << "\" was not found in the array!\n";
+        
+        return array;
+    }
+}
+
+int main(std::string select, int size, int testsAmount) {
+    long int *A = generateArray(size);
+
+    for(int i = 0; i < 7; ++i) {
+        switch(i) {
+            case 0:
+            if(select[i] == '1') {
+                
+            }
+            break;
+            case 1:
+            if(select[i] == '1') //bsearch_i()
+            break;
+            case 2:
+            if(select[i] == '1') //bsearch_r()
+            break;
+            case 3:
+            if(select[i] == '1') //tsearch_i()
+            break;
+            case 4:
+            if(select[i] == '1') //tsearch_r()
+            break;
+            case 5:
+            if(select[i] == '1') //jsearch()
+            break;
+            case 6:
+            if(select[i] == '1') //fsearch()
+            break;
         }
     }
 
