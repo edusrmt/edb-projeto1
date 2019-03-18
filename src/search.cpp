@@ -14,7 +14,16 @@ void print_step (long int vector[], int first, int last) {
     std::cout << "]\n";
 }
 
-int lsearch(long int vector[], int last, long int value, int first = 0) {
+int lsearch(long int vector[], int last, long int value) {
+    for (int i = 0; i <= last; i++) {
+        if (vector[i] == value)
+            return i;
+    }
+
+    return -1;
+}
+
+int lsearch(long int vector[], int first, int last, long int value) {
     for (int i = first; i <= last; i++) {
         if (vector[i] == value)
             return i;
@@ -23,7 +32,7 @@ int lsearch(long int vector[], int last, long int value, int first = 0) {
     return -1;
 }
 
-int bsearch_i(long int vector[], int last, long int value) {
+int bsearch(long int vector[], int last, long int value) {
     int first = 0;
     int length = last + 1;
 
@@ -44,7 +53,7 @@ int bsearch_i(long int vector[], int last, long int value) {
     return -1;
 }
 
-int bsearch_r(long int vector[], int last, long int value, int first = 0) {
+int bsearch(long int vector[], int first, int last, long int value) {
     int length = last - first + 1;
 
     if (first <= last) {
@@ -58,14 +67,14 @@ int bsearch_r(long int vector[], int last, long int value, int first = 0) {
             else
                 last = middle - 1;
 
-            return bsearch_r(vector, last, value, first);
+            return bsearch(vector, last, value, first);
         }
     }
 
     return -1;
 }
 
-int tsearch_i(long int vector[], int last, long int value) {
+int tsearch(long int vector[], int last, long int value) {
     int first = 0;
     int length = last + 1;
 
@@ -94,7 +103,7 @@ int tsearch_i(long int vector[], int last, long int value) {
     return -1;
 }
 
-int tsearch_r(long int vector[], int last, long int value, int first = 0) {
+int tsearch(long int vector[], int first, int last, long int value) {
     int length = last - first + 1;
 
     if (first <= last) {
@@ -117,7 +126,7 @@ int tsearch_r(long int vector[], int last, long int value, int first = 0) {
                     last = indexB - 1;
             }
 
-            return tsearch_r(vector, last, value, first);
+            return tsearch(vector, last, value, first);
         }
 
         length = last - first + 1;
@@ -180,39 +189,52 @@ long int * generateArray(int size) {
         for(int i = 0; i < size; ++i) {
             array[i] = i;
         }
-        
-        return array;
+    }
+    return array;
+}
+
+typedef int IterativeFunction(long int vector[], int last, long int value);
+typedef int RecursiveFunction(long int vector[], int first, int last, long int value);
+
+void callbackFunction(IterativeFunction *function, int minSize, int maxSize, int testsAmount) {
+    float step = (maxSize - minSize)/(testsAmount - 1);
+    float currentSize = minSize;
+    while((int) currentSize <= maxSize) {
+        long int *A = generateArray((int) currentSize);    
+        int result = (*function)(A, ((int) currentSize) - 1, maxSize); 
+        //implementar análise
+        std::cout << "Foi! =)" << std::endl;
+        currentSize += step;
     }
 }
 
-int main(std::string select, int size, int testsAmount) {
-    long int *A = generateArray(size);
+void callbackFunction(RecursiveFunction *function, int minSize, int maxSize, int testsAmount) {
+    float step = (maxSize - minSize)/(testsAmount - 1);
+    float currentSize = minSize;
+    while((int) currentSize <= maxSize) {
+        long int *A = generateArray((int) currentSize);    
+        int result = (*function)(A, 0, ((int) currentSize) - 1, maxSize); 
+        //implementar análise
+        std::cout << "Foi! =)" << std::endl;
+        currentSize += step;
+    }
+}
+
+int main(int argc, char *argv[]) {
+    std::string select = argv[1];
+    int minSize = std::stoi(argv[2]);
+    int maxSize = std::stoi(argv[3]);
+    int testsAmount = std::stoi(argv[4]);
+
+    IterativeFunction *iterativeFunctions[] = {lsearch, bsearch, tsearch, jsearch, fsearch};
+    RecursiveFunction *recursiveFunctions[] = {bsearch, tsearch};
 
     for(int i = 0; i < 7; ++i) {
-        switch(i) {
-            case 0:
-            if(select[i] == '1') {
-                
-            }
-            break;
-            case 1:
-            if(select[i] == '1') //bsearch_i()
-            break;
-            case 2:
-            if(select[i] == '1') //bsearch_r()
-            break;
-            case 3:
-            if(select[i] == '1') //tsearch_i()
-            break;
-            case 4:
-            if(select[i] == '1') //tsearch_r()
-            break;
-            case 5:
-            if(select[i] == '1') //jsearch()
-            break;
-            case 6:
-            if(select[i] == '1') //fsearch()
-            break;
+        if(select[i] == '1') {
+            if(i < 5) 
+                callbackFunction(iterativeFunctions[i], minSize, maxSize, testsAmount);
+            else 
+                callbackFunction(recursiveFunctions[i-5], minSize, maxSize, testsAmount);
         }
     }
 
