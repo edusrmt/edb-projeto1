@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/victorvieira/UFRN/EDB I/edb1-projeto1/include/util.h
+iostream
+-
+iomanip
+-
+fstream
+-
+string
+-
+sstream
+-
+new
+-
+math.h
+-
+chrono
+-
+limits
+-
+
+/Users/victorvieira/UFRN/EDB I/edb1-projeto1/src/util.cpp
+../include/util.h
+/Users/victorvieira/UFRN/EDB I/edb1-projeto1/include/util.h
+

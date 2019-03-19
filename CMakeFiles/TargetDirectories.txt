@@ -1,0 +1,7 @@
+/Users/victorvieira/UFRN/EDB I/edb1-projeto1/CMakeFiles/install/local.dir
+/Users/victorvieira/UFRN/EDB I/edb1-projeto1/CMakeFiles/install/strip.dir
+/Users/victorvieira/UFRN/EDB I/edb1-projeto1/CMakeFiles/Search.dir
+/Users/victorvieira/UFRN/EDB I/edb1-projeto1/CMakeFiles/install.dir
+/Users/victorvieira/UFRN/EDB I/edb1-projeto1/CMakeFiles/list_install_components.dir
+/Users/victorvieira/UFRN/EDB I/edb1-projeto1/CMakeFiles/rebuild_cache.dir
+/Users/victorvieira/UFRN/EDB I/edb1-projeto1/CMakeFiles/edit_cache.dir
