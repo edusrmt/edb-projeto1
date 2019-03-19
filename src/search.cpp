@@ -4,6 +4,8 @@
 #include <string>
 #include <new>
 #include <math.h>
+#include <chrono>
+#include <limits>
 
 void print_step (long int vector[], int first, int last) {
     // Prints out the original data container.
@@ -196,35 +198,66 @@ long int * generateArray(int size) {
 typedef int IterativeFunction(long int vector[], int last, long int value);
 typedef int RecursiveFunction(long int vector[], int first, int last, long int value);
 
-void callbackFunction(IterativeFunction *function, int minSize, int maxSize, int testsAmount) {
-    float step = (maxSize - minSize)/(testsAmount - 1);
+void callbackFunction(IterativeFunction *function, int minSize, int maxSize, int samplesAmount, int testsAmount) {
+    float step = (maxSize - minSize)/(samplesAmount - 1);
     float currentSize = minSize;
     while((int) currentSize <= maxSize) {
         long int *A = generateArray((int) currentSize);    
-        int result = (*function)(A, ((int) currentSize) - 1, maxSize); 
-        //implementar análise
-        std::cout << "Foi! =)" << std::endl;
+        
+        double sum = 0;
+        for(int i = 0; i < testsAmount; i++) {
+            auto start = std::chrono::high_resolution_clock::now();
+            int result = (*function)(A, ((int) currentSize) - 1, maxSize); 
+            auto end = std::chrono::high_resolution_clock::now();
+
+            double duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+
+            sum += duration;
+        }
+        
+        double avg = (sum/testsAmount) * 1e-6;
+
+        std::cout.precision(std::numeric_limits<double>::max_digits10);
+        std::cout << "Current size: " << currentSize << " -> T: " << avg << std::endl;
         currentSize += step;
     }
+
+    std::cout << std::endl;
 }
 
-void callbackFunction(RecursiveFunction *function, int minSize, int maxSize, int testsAmount) {
-    float step = (maxSize - minSize)/(testsAmount - 1);
+void callbackFunction(RecursiveFunction *function, int minSize, int maxSize, int samplesAmount, int testsAmount) {
+    float step = (maxSize - minSize)/(samplesAmount - 1);
     float currentSize = minSize;
     while((int) currentSize <= maxSize) {
         long int *A = generateArray((int) currentSize);    
-        int result = (*function)(A, 0, ((int) currentSize) - 1, maxSize); 
-        //implementar análise
-        std::cout << "Foi! =)" << std::endl;
+        
+        double sum = 0;
+        for(int i = 0; i < testsAmount; i++) {
+            auto start = std::chrono::high_resolution_clock::now();
+            int result = (*function)(A, ((int) currentSize) - 1, maxSize, 0); 
+            auto end = std::chrono::high_resolution_clock::now();
+
+            double duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+
+            sum += duration;
+        }
+        
+        double avg = (sum/testsAmount) * 1e-6;
+
+        std::cout.precision(std::numeric_limits<double>::max_digits10);
+        std::cout << "Current size: " << currentSize << " -> T: " << avg << std::endl;
         currentSize += step;
     }
+
+    std::cout << std::endl;
 }
 
 int main(int argc, char *argv[]) {
     std::string select = argv[1];
     int minSize = std::stoi(argv[2]);
     int maxSize = std::stoi(argv[3]);
-    int testsAmount = std::stoi(argv[4]);
+    int samplesAmount = std::stoi(argv[4]);
+    int testsAmount = std::stoi(argv[5]);
 
     IterativeFunction *iterativeFunctions[] = {lsearch, bsearch, tsearch, jsearch, fsearch};
     RecursiveFunction *recursiveFunctions[] = {bsearch, tsearch};
@@ -232,9 +265,9 @@ int main(int argc, char *argv[]) {
     for(int i = 0; i < 7; ++i) {
         if(select[i] == '1') {
             if(i < 5) 
-                callbackFunction(iterativeFunctions[i], minSize, maxSize, testsAmount);
+                callbackFunction(iterativeFunctions[i], minSize, maxSize, samplesAmount, testsAmount);
             else 
-                callbackFunction(recursiveFunctions[i-5], minSize, maxSize, testsAmount);
+                callbackFunction(recursiveFunctions[i-4], minSize, maxSize, samplesAmount, testsAmount);
         }
     }
 
