@@ -203,7 +203,7 @@ typedef int IterativeFunction(long int vector[], int last, long int value);
 typedef int RecursiveFunction(long int vector[], int first, int last, long int value);
 
 void writeHeader() {
-    std::ofstream records("../data/tempos3.txt", std::ios::in | std::ios::out | std::ios::app);
+    std::ofstream records("../data/tempos3.txt", std::ios::in | std::ios::out | std::ios::trunc);
     std::vector<std::string> headerItems = {"# N", "ILS", "IBS", "ITS", "IJS", "IFS", "RBS", "RTS"};
     std::stringstream header;
 
@@ -215,27 +215,73 @@ void writeHeader() {
     records << header.str() << std::endl;
 }
 
+void writeAmount(int minSize, int maxSize, int samplesAmount) {
+    std::ofstream records("../data/tempos3.txt", std::ios::in | std::ios::out | std::ios::binary);
+    float step = (maxSize - minSize)/(samplesAmount - 1);
+    float currentSize = minSize;
+    
+    int lineCount = 0;
+    while((int) currentSize <= maxSize) {
+        if(records.is_open()) {
+            int lineJump = (lineCount+1) * 89;
+            std::stringstream value;
+            std::stringstream line;
+
+            records.seekp(lineJump, std::ios::beg);
+            
+            value << std::setprecision(std::numeric_limits<double>::max_digits10) << currentSize;
+
+            line << value.str() << std::setfill(' ') << std::setw(11 - value.str().size()) << "" << std::endl;
+            records.write(line.str().c_str(), line.str().size());
+        } else {
+            std::cout << "Falha ao abrir arquivo" << std::endl;
+        }
+
+        currentSize += step;
+        lineCount++;
+    }
+}
+
 void writeInFile(int algorithmIndex, std::string value, int lineCount) {
     std::ofstream records("../data/tempos3.txt", std::ios::in | std::ios::out | std::ios::binary);
     if(records.is_open()) {
-        int lineJump = lineCount * 89;
         std::stringstream line;
 
-        int tab = (11*algorithmIndex);    
-        records.seekp(89+tab+lineJump, std::ios::beg);
-
-        if(algorithmIndex == 0) {
-            line << std::setprecision(std::numeric_limits<double>::max_digits10) << value << std::setfill(' ') << std::setw(22 - value.size()) << "";
-        } else {
-            records.seekp(89+tab+lineJump+11, std::ios::beg);
-            line << std::setprecision(std::numeric_limits<double>::max_digits10) << value << std::setfill(' ') << std::setw(11 - value.size()) << "";
-        }
-
-        line << std::setfill(' ') << std::setw(88 - line.str().size()) << std::endl;
+        int lineJump = (lineCount+1) * 89;
+        int tab = 11 * (algorithmIndex+1);
+        records.seekp(lineJump+tab, std::ios::beg); 
+        
+        line << value;
+        line << std::setfill(' ') << std::setw(11 - line.str().size()) << std::endl;
 
         records.write(line.str().c_str(), line.str().size());
     } else {
         std::cout << "Falha ao abrir arquivo" << std::endl;
+    }
+}
+
+void writeBlank(int algorithmIndex, int minSize, int maxSize, int samplesAmount) {
+    std::ofstream records("../data/tempos3.txt", std::ios::in | std::ios::out | std::ios::binary);
+    float step = (maxSize - minSize)/(samplesAmount - 1);
+    float currentSize = minSize;
+    
+    int lineCount = 0;
+    while((int) currentSize <= maxSize) {
+        if(records.is_open()) {
+            int lineJump = (lineCount+1) * 89;
+            int tab = 11 * (algorithmIndex+1);
+            records.seekp(lineJump+tab, std::ios::beg);
+            
+            std::stringstream line;
+
+            line << std::setfill(' ') << std::setw(11) << "" << std::endl;
+            records.write(line.str().c_str(), line.str().size());
+        } else {
+            std::cout << "Falha ao abrir arquivo" << std::endl;
+        }
+
+        currentSize += step;
+        lineCount++;
     }
 }
 
@@ -261,15 +307,8 @@ void callbackFunction(IterativeFunction *function, int minSize, int maxSize, int
         double avg = (sum/testsAmount) * 1e-6;
 
         std::stringstream value;
-        
-        if(algorithmIndex == 0) {
-            std::stringstream number;
-            number << std::setprecision(std::numeric_limits<double>::max_digits10) << (int) currentSize;
-
-            value << number.str() << std::setfill(' ') << std::setw(11 - number.str().size()) << "";
-        }
-        
         std::stringstream number;
+
         number << std::fixed << std::setprecision(6) << avg;
         value << number.str() << std::setfill(' ') << std::setw(11 - number.str().size()) << "";
         
@@ -302,15 +341,8 @@ void callbackFunction(RecursiveFunction *function, int minSize, int maxSize, int
         double avg = (sum/testsAmount) * 1e-6;
 
         std::stringstream value;
-        
-        if(algorithmIndex == 0) {
-            std::stringstream number;
-            number << std::setprecision(std::numeric_limits<double>::max_digits10) << (int) currentSize;
-
-            value << number.str() << std::setfill(' ') << std::setw(11 - number.str().size()) << "";
-        }
-        
         std::stringstream number;
+
         number << std::fixed << std::setprecision(6) << avg;
         value << number.str() << std::setfill(' ') << std::setw(11 - number.str().size()) << "";
         
@@ -332,6 +364,7 @@ int main(int argc, char *argv[]) {
     RecursiveFunction *recursiveFunctions[] = {bsearch, tsearch};
 
     writeHeader();
+    writeAmount(minSize, maxSize, samplesAmount);
     for(int i = 0; i < 7; ++i) {
         if(select[i] == '1') {
             if(i < 5) {
@@ -339,6 +372,8 @@ int main(int argc, char *argv[]) {
             } else {
                 callbackFunction(recursiveFunctions[i-5], minSize, maxSize, samplesAmount, testsAmount, i);
             }
+        } else {
+            writeBlank(i, minSize, maxSize, samplesAmount);
         }
     }
 
