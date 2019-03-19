@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/Users/victorvieira/UFRN/EDB I/edb1-projeto1/include/util.h
+/home/edusrmt/Documentos/edb1-projeto1/include/util.h
 iostream
 -
 iomanip
@@ -26,7 +26,7 @@ chrono
 limits
 -
 
-/Users/victorvieira/UFRN/EDB I/edb1-projeto1/src/util.cpp
+/home/edusrmt/Documentos/edb1-projeto1/src/util.cpp
 ../include/util.h
-/Users/victorvieira/UFRN/EDB I/edb1-projeto1/include/util.h
+/home/edusrmt/Documentos/edb1-projeto1/include/util.h
 

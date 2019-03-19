@@ -4,11 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/victorvieira/UFRN/EDB I/edb1-projeto1/src/main.cpp" "/Users/victorvieira/UFRN/EDB I/edb1-projeto1/CMakeFiles/Search.dir/src/main.cpp.o"
-  "/Users/victorvieira/UFRN/EDB I/edb1-projeto1/src/search.cpp" "/Users/victorvieira/UFRN/EDB I/edb1-projeto1/CMakeFiles/Search.dir/src/search.cpp.o"
-  "/Users/victorvieira/UFRN/EDB I/edb1-projeto1/src/util.cpp" "/Users/victorvieira/UFRN/EDB I/edb1-projeto1/CMakeFiles/Search.dir/src/util.cpp.o"
+  "/home/edusrmt/Documentos/edb1-projeto1/src/main.cpp" "/home/edusrmt/Documentos/edb1-projeto1/CMakeFiles/Search.dir/src/main.cpp.o"
+  "/home/edusrmt/Documentos/edb1-projeto1/src/search.cpp" "/home/edusrmt/Documentos/edb1-projeto1/CMakeFiles/Search.dir/src/search.cpp.o"
+  "/home/edusrmt/Documentos/edb1-projeto1/src/util.cpp" "/home/edusrmt/Documentos/edb1-projeto1/CMakeFiles/Search.dir/src/util.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "AppleClang")
+set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
