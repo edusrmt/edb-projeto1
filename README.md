@@ -69,4 +69,5 @@ Vale ressaltar, que quanto maior o número de testes, consequentemente, mais dem
 Os autores desse projeto foram:
 
 Carlos Eduardo Alves Sarmento ![Twitter Follow](https://img.shields.io/twitter/follow/edusrmt.svg?style=social)
+
 Victor Raphaell Vieira Rodrigues ![Twitter Follow](https://img.shields.io/twitter/follow/__victorvieira.svg?style=social)
