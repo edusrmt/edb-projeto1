@@ -1,7 +1,0 @@
-/home/edusrmt/Documentos/edb1-projeto1/CMakeFiles/install/strip.dir
-/home/edusrmt/Documentos/edb1-projeto1/CMakeFiles/edit_cache.dir
-/home/edusrmt/Documentos/edb1-projeto1/CMakeFiles/Search.dir
-/home/edusrmt/Documentos/edb1-projeto1/CMakeFiles/install.dir
-/home/edusrmt/Documentos/edb1-projeto1/CMakeFiles/rebuild_cache.dir
-/home/edusrmt/Documentos/edb1-projeto1/CMakeFiles/list_install_components.dir
-/home/edusrmt/Documentos/edb1-projeto1/CMakeFiles/install/local.dir

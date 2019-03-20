@@ -1,1 +1,0 @@
-/usr/bin/c++   -Wall    CMakeFiles/Search.dir/src/main.cpp.o CMakeFiles/Search.dir/src/search.cpp.o CMakeFiles/Search.dir/src/util.cpp.o  -o Search 
