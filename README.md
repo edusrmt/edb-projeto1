@@ -1,84 +1,71 @@
-# 1. Introduction
+# Projeto de Análise Empírica dos Algoritmos de Busca
 
-This program might be use to compare the execution time of two algorithms from different complexity classes to solve the filter problem.
+## 1. Introdução
 
-Based on some preprocessing directives setup while compiling this program, it is possible to print out the execution time of the chosen algorithm for a given input of size defined by command line argument.
+O projeto foi solicitado pelo professor **Selan Rodrigues dos Santos** como atividade avaliativa da turma de **Estrutura de Dados Básica I** do curso **Bacharelado de Tecnologia da Informação** da **Universidade Federal do Rio Grande do Norte**.
 
-# 2. The Problem
+O software desenvolvido visa analisar, de maneira empírica, 5 algoritmos de busca: 
 
-The filter problem is:
-> Given the range `[first;last)` defined over an array of integers, remove all the null and negative elements, and return a pointer to the new `last`, which should define a range containing the filtered elements.
-> The processes must preserve the relative order of the elements that will be kept in the new range.
+ - Busca Linear
+ - Busca Binária
+ - Busca Ternária
+ - *Jump Search*
+ - *Fibonacci Search*
 
-## Example
+As buscas binária e ternária são implementadas de forma recursiva e iterativa no projeto, portanto, somamos 7 implementações para comparar o desempenho de cada de acordo com o aumento do número de amostras.
 
-Given the range `[first;last)` with the following values
-> -3, 4, 8, 0, -2, 7, 0, 12, -1
+## 2. Como usar
 
-the program should return the pointer `last` so that if we print `[first;last)` again we get
-> 4, 8, 7, 12
+Para compilar o projeto, faz-se necessário a instalação da ferramenta [CMake](https://cmake.org/) no computador.
 
-If all elements in the input range are null or negative, the output range `[first, last)` should be empty.
+Com o CMake instalado, basta acessar a pasta do projeto pelo Terminal, cmd, ou pelo software de shellscript e digitar os comandos:
 
-If all elements in the input range are positive, the output range `[first,last)` should be the same as the input.
+    ccmake .
+    make
 
-# 3. Compiling
+Feito isso, basta executar o software.
 
-To compile you may enter this at the terminal prompt:
+## 3. Execução
+Para realizar a execução do software, enviamos alguns parâmetros para configurar os testes junto do comando de execução, na seguinte forma:
 
-```
-g++ -Wall -std=c++11 filter_runtime.cpp -o filter
-```
+    ./Search [PALAVRA_BINÁRIA] [MIN_SIZE] [MAX_SIZE] [SAMPLES_AMOUNT] [TESTS_AMOUNT]
+A estrutura acima é recebida no `main()` e interpretada deste modo:
 
-Alternatively, a cmake file is available. Follow the steps below:
+ - `[PALAVRA_BINÁRIA]` é uma palavra de 7 bits e cada bit liga ou desliga (1 ou 0, respectivamente) o teste de cada função, onde `[I] [II] [III] [IV] [V] [VI] [VII]` representam:
+ -- `[I]`: Busca Linear Iterativa
+ -- `[II]`: Busca Binária Iterativa
+ -- `[III]`: Busca Ternária Iterativa
+ -- `[IV]`: Jump Search
+ -- `[V]`: Fibonacci Search
+ -- `[VI]`: Busca Binária Recursiva
+ -- `[VII]`: Busca Ternária Recursiva
 
-1. Create a build directory: `mkdir build`.
-2. Change into the build directory: `cd build`.
-3. Generate the project file (Makefile): `cmake -G "Unix Makefiles" ..`
-4. Compile each target (`timing_filter` and `run_tests`) or both targets at the same time: `cmake --build . --configure Release --target timing_filter` or
- `cmake --build . --configure Release --target run_tests`
+ - `[MIN_SIZE]` é o tamanho mínimo que os vetores criados irão assumir nos testes.
+ - `[MAX_SIZE]` é o tamanho máximo que os vetores criados irão assumir nos testes.
+ - `[SAMPLES_AMOUNT]` é a quantidade de vetores que serão criados com o tamanho variando de `[MIN_SIZE]` até `[MAX_SIZE]`.
+ - `[TESTS_AMOUNT]` é a quantidade de vezes que cada teste vai se repetir, o tempo de cada repetição é somado e dividido pela quantidade de testes, criando-se, uma média de testes.
 
-## Setting the execution options
-The program has several *preprocessing directives* that might be added to the compile line and  enables you to choose between the following running options:
+Um exemplo de como podemos executar o código:
+`./Search 1111111 0 350000000 3500 100`
+No caso acima, o programa vai executar todos os algoritmos de busca com 3500 vetores de tamanho a variar entre 0 e 350 milhões, igualmente, repetindo cada teste 100 vezes escrevendo o resultado num arquivo de texto.
 
-* We may choose between a *linear*  and a *quadractic*  algorithm to solve the problem.
-    + Add `-D ALGO="QUAD"` to choose the quadratic algorithm.
-    + Add `-D ALGO="LIN"` to choose the linear algorithm (default option).
+>Caso o usuário desejar, o programa pode executar somente alguns algoritmos e criar o arquivo com esses dados, no entanto, o arquivo final gerado terá colunas vazias para os algoritmos que não foram ligados.
 
-* We may choose between the three types input range configuration:
-    + Add `-D CASE="AVERAGE"` to generate input values randomly chosen from `[-100;100]` (default option).
-    + Add `-D CASE="WORST"` to generate only null or negative input values.
-    + Add `-D CASE="BEST"` to generate only positive input values.
+## 4. Resultado
+O software escreve os resultados obtidos em um arquivo `tempos.txt` na pasta `data`  com a seguinte estrutura:
+`N       ILS            IBS            ITS            IJS            IFS            RBS            RTS`           
+|N|ILS|IBS|ITS|IJS|IFS|RBS|RTS|
+|-|---|---|---|---|---|---|---|
+|Número de Amostras|Tempo de execução|Tempo de execução|Tempo de execução|Tempo de execução|Tempo de execução|Tempo de execução|Tempo de execução|
 
-While compiling you may also turn on/off the following preprocessing directives:
+> O tempo de execução é medido em milisegundos.
+ 
+## 5. Limitações
+Utilizamos o limite de 350 milhões no parâmetro `[MAX_SIZE]` nos nossos testes, esse valor foi escolhido por limitações de hardware (memória, processador...). Em relação ao limite de cada parâmetro, eles são salvos como variáveis do tipo `int`, portanto, limitam-se em 2,147,483,647.
 
-* `-D DEBUG`: to print out messages that explain intermediate steps of the running algorithm.
-* `-D PRINT`: to print the input and the output range.
+Vale ressaltar, que quanto maior o número de testes, consequentemente, mais demorado é o processo.
 
-By default, i.e. if no preprocessing directive is provided while compiling, the program runs with the following parameters set:
-
-* Range with 20 elements in the average case.
-* The linear algorithm.
-* Not printing the input/output range.
-* Not displaying any debug message.
-
-# 4. Running
-
-To run you may inform the size of the input range, which should be filled with random values: `$ .\filter [input_size]`
-
-For instance, the example below
-
-```
-$ .\filter
-```
-
-runs filter with 20 random values, whereas the example below
-
-```
-$ .\filter 100
-```
-
-runs filter with 100 random values.
-
-In case you provide an invalid input value, the program defaults to 20.
-
+## 6. Autores
+Os autores desse projeto foram:
+Carlos Eduardo Alves Sarmento !(https://img.shields.io/twitter/follow/__edusrmt.svg?style=social)
+Victor Raphaell Vieira Rodrigues !(https://img.shields.io/twitter/follow/__victorvieira.svg?style=social) 
